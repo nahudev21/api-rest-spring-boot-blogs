@@ -6,6 +6,9 @@ import com.Nahudev.application_blog_api_rest.repository.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PostServiceImpl implements IPostService{
 
@@ -14,21 +17,39 @@ public class PostServiceImpl implements IPostService{
 
     @Override
     public PostEntityDTO createPost(PostEntityDTO postEntityDTO) {
+        PostEntity postEntity = mapOutPostEntity(postEntityDTO);
+
+        PostEntity newPost = postRepository.save(postEntity);
+
+        return mapOutPostDTO(newPost);
+    }
+
+    @Override
+    public List<PostEntityDTO> getAllPost() {
+        List<PostEntity> postEntities = postRepository.findAll();
+
+        return postEntities.stream().map(this::mapOutPostDTO).collect(Collectors.toList());
+    }
+
+    private PostEntityDTO mapOutPostDTO(PostEntity postEntity) {
+        PostEntityDTO postDTO = new PostEntityDTO();
+
+        postDTO.setPost_id(postEntity.getPost_id());
+        postDTO.setTitle(postEntity.getTitle());
+        postDTO.setDescription(postEntity.getDescription());
+        postDTO.setContent(postEntity.getContent());
+
+        return postDTO;
+    }
+
+    private PostEntity mapOutPostEntity(PostEntityDTO postEntityDTO) {
         PostEntity postEntity = new PostEntity();
 
         postEntity.setTitle(postEntityDTO.getTitle());
         postEntity.setDescription(postEntityDTO.getDescription());
         postEntity.setContent(postEntityDTO.getContent());
 
-        PostEntity newPost = postRepository.save(postEntity);
-
-        PostEntityDTO postResponse = new PostEntityDTO();
-
-        postResponse.setPost_id(newPost.getPost_id());
-        postResponse.setTitle(newPost.getTitle());
-        postResponse.setDescription(newPost.getDescription());
-        postResponse.setContent(newPost.getContent());
-
-        return postResponse;
+        return postEntity;
     }
+
 }
