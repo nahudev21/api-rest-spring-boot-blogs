@@ -10,4 +10,6 @@ public interface IPostService {
 
     public List<PostEntityDTO> getAllPost();
 
+    public PostEntityDTO getPostById(Long post_id);
+
 }

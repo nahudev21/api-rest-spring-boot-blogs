@@ -22,6 +22,7 @@ public class PostControllers {
     }
 
     @GetMapping("/getAll")
+    @ResponseBody
     public ResponseEntity<?> getAllPosts() {
         List<PostEntityDTO> postList = postService.getAllPost();
 
@@ -30,6 +31,12 @@ public class PostControllers {
         }
 
         return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/getById/{post_id}")
+    @ResponseBody
+    public ResponseEntity<PostEntityDTO> getPostById(@PathVariable(name = "post_id") Long post_id) {
+        return ResponseEntity.ok(postService.getPostById(post_id));
     }
 
 }

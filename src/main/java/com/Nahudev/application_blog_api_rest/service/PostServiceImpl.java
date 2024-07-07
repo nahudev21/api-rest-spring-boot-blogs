@@ -1,6 +1,7 @@
 package com.Nahudev.application_blog_api_rest.service;
 
 import com.Nahudev.application_blog_api_rest.dto.PostEntityDTO;
+import com.Nahudev.application_blog_api_rest.exceptions.ResourceNotFoundException;
 import com.Nahudev.application_blog_api_rest.model.PostEntity;
 import com.Nahudev.application_blog_api_rest.repository.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,13 @@ public class PostServiceImpl implements IPostService{
         List<PostEntity> postEntities = postRepository.findAll();
 
         return postEntities.stream().map(this::mapOutPostDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public PostEntityDTO getPostById(Long post_id) {
+        PostEntity postEntity = postRepository.findById(post_id).orElseThrow(() ->
+                new ResourceNotFoundException("Publicacion", "id", post_id));
+        return mapOutPostDTO(postEntity);
     }
 
     private PostEntityDTO mapOutPostDTO(PostEntity postEntity) {
