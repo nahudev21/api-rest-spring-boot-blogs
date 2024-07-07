@@ -12,4 +12,6 @@ public interface IPostService {
 
     public PostEntityDTO getPostById(Long post_id);
 
+    public PostEntityDTO editPost(PostEntityDTO postEntityDTO, Long post_id);
+
 }

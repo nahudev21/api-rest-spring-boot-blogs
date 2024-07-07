@@ -39,4 +39,12 @@ public class PostControllers {
         return ResponseEntity.ok(postService.getPostById(post_id));
     }
 
+    @PutMapping("/edit/{post_id}")
+    public ResponseEntity<PostEntityDTO> editPost(@RequestBody PostEntityDTO postEntityDTO,
+                                                  @PathVariable(name = "post_id") Long post_id) {
+
+        PostEntityDTO postResponse = postService.editPost(postEntityDTO, post_id);
+        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+    }
+
 }

@@ -22,7 +22,7 @@ public class ResourceNotFoundException extends RuntimeException{
     private Long valueField;
 
     public ResourceNotFoundException(String nameResource, String nameField, Long valueField) {
-        super(String.format("%s No encontrado con : &s : '%s'", nameResource, nameField, valueField));
+        super(String.format("%s No encontrada con : %s : '%s'", nameResource, nameField, valueField));
         this.nameResource = nameResource;
         this.nameField = nameField;
         this.valueField = valueField;

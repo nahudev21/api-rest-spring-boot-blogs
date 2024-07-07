@@ -39,6 +39,19 @@ public class PostServiceImpl implements IPostService{
         return mapOutPostDTO(postEntity);
     }
 
+    @Override
+    public PostEntityDTO editPost(PostEntityDTO postEntityDTO, Long post_id) {
+        PostEntity postFound = postRepository.findById(post_id).orElseThrow(() ->
+                new ResourceNotFoundException("Publicacion", "id", post_id));
+
+        postFound.setTitle(postEntityDTO.getTitle());
+        postFound.setDescription(postEntityDTO.getDescription());
+        postFound.setContent(postEntityDTO.getContent());
+        PostEntity postEdited = postRepository.save(postFound);
+
+        return mapOutPostDTO(postEdited);
+    }
+
     private PostEntityDTO mapOutPostDTO(PostEntity postEntity) {
         PostEntityDTO postDTO = new PostEntityDTO();
 
