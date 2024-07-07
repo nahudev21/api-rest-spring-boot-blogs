@@ -14,4 +14,6 @@ public interface IPostService {
 
     public PostEntityDTO editPost(PostEntityDTO postEntityDTO, Long post_id);
 
+    public void deletePost(Long post_id);
+
 }

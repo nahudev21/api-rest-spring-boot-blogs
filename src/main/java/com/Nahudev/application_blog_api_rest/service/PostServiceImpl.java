@@ -52,6 +52,14 @@ public class PostServiceImpl implements IPostService{
         return mapOutPostDTO(postEdited);
     }
 
+    @Override
+    public void deletePost(Long post_id) {
+        PostEntity postFound = postRepository.findById(post_id).orElseThrow(() ->
+                new ResourceNotFoundException("Publicacion", "id", post_id));
+
+        postRepository.delete(postFound);
+    }
+
     private PostEntityDTO mapOutPostDTO(PostEntity postEntity) {
         PostEntityDTO postDTO = new PostEntityDTO();
 
