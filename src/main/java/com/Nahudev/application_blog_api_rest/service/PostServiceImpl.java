@@ -1,10 +1,15 @@
 package com.Nahudev.application_blog_api_rest.service;
 
 import com.Nahudev.application_blog_api_rest.dto.PostEntityDTO;
+import com.Nahudev.application_blog_api_rest.dto.PostResponse;
 import com.Nahudev.application_blog_api_rest.exceptions.ResourceNotFoundException;
 import com.Nahudev.application_blog_api_rest.model.PostEntity;
 import com.Nahudev.application_blog_api_rest.repository.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,23 +31,36 @@ public class PostServiceImpl implements IPostService{
     }
 
     @Override
-    public List<PostEntityDTO> getAllPost() {
-        List<PostEntity> postEntities = postRepository.findAll();
+    public PostResponse getAllPost(int numPage, int pageSize, String orderBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(orderBy).ascending():Sort.by(orderBy).descending();
+        Pageable pageable = PageRequest.of(numPage, pageSize, sort);
+        Page<PostEntity> posts = postRepository.findAll(pageable);
 
-        return postEntities.stream().map(this::mapOutPostDTO).collect(Collectors.toList());
+        List<PostEntity> postEntities = posts.getContent();
+        List<PostEntityDTO> content = postEntities.stream().map(this::mapOutPostDTO).collect(Collectors.toList());
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(content);
+        postResponse.setPageNumber(posts.getNumber());
+        postResponse.setPageSize(posts.getSize());
+        postResponse.setTotalItems(posts.getTotalElements());
+        postResponse.setTotalPages(posts.getTotalPages());
+        postResponse.setLast(posts.isLast());
+
+        return postResponse;
     }
 
     @Override
-    public PostEntityDTO getPostById(Long post_id) {
-        PostEntity postEntity = postRepository.findById(post_id).orElseThrow(() ->
-                new ResourceNotFoundException("Publicacion", "id", post_id));
+    public PostEntityDTO getPostById(Long id) {
+        PostEntity postEntity = postRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Publicacion", "id", id));
         return mapOutPostDTO(postEntity);
     }
 
     @Override
-    public PostEntityDTO editPost(PostEntityDTO postEntityDTO, Long post_id) {
-        PostEntity postFound = postRepository.findById(post_id).orElseThrow(() ->
-                new ResourceNotFoundException("Publicacion", "id", post_id));
+    public PostEntityDTO editPost(PostEntityDTO postEntityDTO, Long id) {
+        PostEntity postFound = postRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Publicacion", "id", id));
 
         postFound.setTitle(postEntityDTO.getTitle());
         postFound.setDescription(postEntityDTO.getDescription());
@@ -53,9 +71,9 @@ public class PostServiceImpl implements IPostService{
     }
 
     @Override
-    public void deletePost(Long post_id) {
-        PostEntity postFound = postRepository.findById(post_id).orElseThrow(() ->
-                new ResourceNotFoundException("Publicacion", "id", post_id));
+    public void deletePost(Long id) {
+        PostEntity postFound = postRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Publicacion", "id", id));
 
         postRepository.delete(postFound);
     }
@@ -63,7 +81,7 @@ public class PostServiceImpl implements IPostService{
     private PostEntityDTO mapOutPostDTO(PostEntity postEntity) {
         PostEntityDTO postDTO = new PostEntityDTO();
 
-        postDTO.setPost_id(postEntity.getPost_id());
+        postDTO.setId(postEntity.getId());
         postDTO.setTitle(postEntity.getTitle());
         postDTO.setDescription(postEntity.getDescription());
         postDTO.setContent(postEntity.getContent());

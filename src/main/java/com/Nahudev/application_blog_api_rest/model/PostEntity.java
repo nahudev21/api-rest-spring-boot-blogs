@@ -15,7 +15,7 @@ public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long post_id;
+    private Long id;
 
     @Column(name = "titulo")
     private String title;
@@ -29,7 +29,7 @@ public class PostEntity {
     @Override
     public String toString() {
         return "PostEntity{" +
-                "post_id=" + post_id +
+                "post_id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 '}';

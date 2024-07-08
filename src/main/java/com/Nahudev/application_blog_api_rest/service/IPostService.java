@@ -1,19 +1,19 @@
 package com.Nahudev.application_blog_api_rest.service;
 
 import com.Nahudev.application_blog_api_rest.dto.PostEntityDTO;
+import com.Nahudev.application_blog_api_rest.dto.PostResponse;
 
-import java.util.List;
 
 public interface IPostService {
 
     public PostEntityDTO createPost(PostEntityDTO postEntityDTO);
 
-    public List<PostEntityDTO> getAllPost();
+    public PostResponse getAllPost(int numPage, int pageSize, String orderBy, String sortDir);
 
-    public PostEntityDTO getPostById(Long post_id);
+    public PostEntityDTO getPostById(Long id);
 
-    public PostEntityDTO editPost(PostEntityDTO postEntityDTO, Long post_id);
+    public PostEntityDTO editPost(PostEntityDTO postEntityDTO, Long id);
 
-    public void deletePost(Long post_id);
+    public void deletePost(Long id);
 
 }

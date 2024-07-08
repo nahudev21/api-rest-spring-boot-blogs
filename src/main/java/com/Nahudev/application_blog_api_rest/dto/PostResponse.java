@@ -5,18 +5,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostEntityDTO {
+public class PostResponse {
 
-    private Long id;
+    List<PostEntityDTO> content;
 
-    private String title;
+    private int pageNumber;
 
-    private String description;
+    private int pageSize;
 
-    private String content;
+    private Long totalItems;
+
+    private int totalPages;
+
+    private boolean last;
 
 }
