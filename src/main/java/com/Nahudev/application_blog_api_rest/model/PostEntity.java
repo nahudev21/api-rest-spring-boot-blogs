@@ -3,6 +3,9 @@ package com.Nahudev.application_blog_api_rest.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -26,12 +29,17 @@ public class PostEntity {
     @Column(name = "contenido")
     private String content;
 
+    @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CommentEntity> comments = new HashSet<>();
+
     @Override
     public String toString() {
         return "PostEntity{" +
-                "post_id=" + id +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
+                ", content='" + content + '\'' +
+                ", comments=" + comments +
                 '}';
     }
 }
