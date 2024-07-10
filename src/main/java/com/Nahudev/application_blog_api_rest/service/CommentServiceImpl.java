@@ -9,6 +9,9 @@ import com.Nahudev.application_blog_api_rest.repository.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentServiceImpl implements ICommentService{
 
@@ -29,6 +32,13 @@ public class CommentServiceImpl implements ICommentService{
         CommentEntity newComment = commentRepository.save(comment);
 
         return mapOutCommentDTO(newComment);
+    }
+
+    @Override
+    public List<CommentDTO> getAllCommentsByPost(Long id_post) {
+
+        List<CommentEntity> comments = commentRepository.findByPostEntityId(id_post);
+        return comments.stream().map(comment -> mapOutCommentDTO(comment)).collect(Collectors.toList());
     }
 
     public CommentDTO mapOutCommentDTO(CommentEntity commentEntity) {
