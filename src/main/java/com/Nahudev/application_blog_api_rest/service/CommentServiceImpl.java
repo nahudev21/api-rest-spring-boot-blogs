@@ -80,6 +80,21 @@ public class CommentServiceImpl implements ICommentService{
         return mapOutCommentDTO(commentEdited);
     }
 
+    @Override
+    public void deleteComment(Long id_post, Long id_comment) {
+        PostEntity postEntity = postRepository.findById(id_post).orElseThrow(() ->
+                new ResourceNotFoundException("Publicacion", "id", id_post));
+
+        CommentEntity comment = commentRepository.findById(id_comment).orElseThrow(() ->
+                new ResourceNotFoundException("Comentario", "id", id_comment));
+
+        if (!comment.getPostEntity().getId().equals(postEntity.getId())) {
+            throw  new BlogAppException(HttpStatus.BAD_REQUEST, "El comentario no pertenece a la publicacion");
+        }
+
+        commentRepository.delete(comment);
+    }
+
     public CommentDTO mapOutCommentDTO(CommentEntity commentEntity) {
 
         CommentDTO commentDTO = new CommentDTO();

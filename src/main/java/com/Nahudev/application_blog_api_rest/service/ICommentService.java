@@ -14,4 +14,6 @@ public interface ICommentService {
 
     public CommentDTO editComment(Long id_post,Long id_comment, CommentDTO commentRequest);
 
+    public void deleteComment(Long id_post, Long id_comment);
+
 }
