@@ -10,4 +10,6 @@ public interface ICommentService {
 
     public List<CommentDTO> getAllCommentsByPost(Long id_post);
 
+    public CommentDTO getCommentByPost(Long id_post, Long id_comment);
+
 }

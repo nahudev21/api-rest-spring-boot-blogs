@@ -1,12 +1,14 @@
 package com.Nahudev.application_blog_api_rest.service;
 
 import com.Nahudev.application_blog_api_rest.dto.CommentDTO;
+import com.Nahudev.application_blog_api_rest.exceptions.BlogAppException;
 import com.Nahudev.application_blog_api_rest.exceptions.ResourceNotFoundException;
 import com.Nahudev.application_blog_api_rest.model.CommentEntity;
 import com.Nahudev.application_blog_api_rest.model.PostEntity;
 import com.Nahudev.application_blog_api_rest.repository.ICommentRepository;
 import com.Nahudev.application_blog_api_rest.repository.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +41,22 @@ public class CommentServiceImpl implements ICommentService{
 
         List<CommentEntity> comments = commentRepository.findByPostEntityId(id_post);
         return comments.stream().map(comment -> mapOutCommentDTO(comment)).collect(Collectors.toList());
+    }
+
+    @Override
+    public CommentDTO getCommentByPost(Long id_post, Long id_comment) {
+
+        PostEntity postEntity = postRepository.findById(id_post).orElseThrow(() ->
+                new ResourceNotFoundException("Publicacion", "id", id_post));
+
+        CommentEntity comment = commentRepository.findById(id_comment).orElseThrow(() ->
+                new ResourceNotFoundException("Comentario", "id", id_comment));
+
+        if (!comment.getPostEntity().getId().equals(postEntity.getId())) {
+            throw  new BlogAppException(HttpStatus.BAD_REQUEST, "El comentario no pertenece a la publicacion");
+        }
+
+        return mapOutCommentDTO(comment);
     }
 
     public CommentDTO mapOutCommentDTO(CommentEntity commentEntity) {
