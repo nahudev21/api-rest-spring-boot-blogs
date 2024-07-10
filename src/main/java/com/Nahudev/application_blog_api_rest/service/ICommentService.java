@@ -12,4 +12,6 @@ public interface ICommentService {
 
     public CommentDTO getCommentByPost(Long id_post, Long id_comment);
 
+    public CommentDTO editComment(Long id_post,Long id_comment, CommentDTO commentRequest);
+
 }
