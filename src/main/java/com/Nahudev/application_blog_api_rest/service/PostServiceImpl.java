@@ -5,6 +5,7 @@ import com.Nahudev.application_blog_api_rest.dto.PostResponse;
 import com.Nahudev.application_blog_api_rest.exceptions.ResourceNotFoundException;
 import com.Nahudev.application_blog_api_rest.model.PostEntity;
 import com.Nahudev.application_blog_api_rest.repository.IPostRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements IPostService{
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private IPostRepository postRepository;
@@ -79,24 +83,13 @@ public class PostServiceImpl implements IPostService{
     }
 
     private PostEntityDTO mapOutPostDTO(PostEntity postEntity) {
-        PostEntityDTO postDTO = new PostEntityDTO();
 
-        postDTO.setId(postEntity.getId());
-        postDTO.setTitle(postEntity.getTitle());
-        postDTO.setDescription(postEntity.getDescription());
-        postDTO.setContent(postEntity.getContent());
-
-        return postDTO;
+        return modelMapper.map(postEntity, PostEntityDTO.class);
     }
 
     private PostEntity mapOutPostEntity(PostEntityDTO postEntityDTO) {
-        PostEntity postEntity = new PostEntity();
 
-        postEntity.setTitle(postEntityDTO.getTitle());
-        postEntity.setDescription(postEntityDTO.getDescription());
-        postEntity.setContent(postEntityDTO.getContent());
-
-        return postEntity;
+        return modelMapper.map(postEntityDTO, PostEntity.class);
     }
 
 }

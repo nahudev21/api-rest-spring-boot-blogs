@@ -1,5 +1,6 @@
 package com.Nahudev.application_blog_api_rest.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class PostEntity {
     @Column(name = "contenido")
     private String content;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CommentEntity> comments = new HashSet<>();
 

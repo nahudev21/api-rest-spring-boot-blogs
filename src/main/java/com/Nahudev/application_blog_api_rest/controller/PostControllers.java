@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/api/posts")
 public class PostControllers {
 
     @Autowired
@@ -22,7 +22,7 @@ public class PostControllers {
         return new ResponseEntity<>(postService.createPost(postEntityDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping()
     @ResponseBody
     public ResponseEntity<?> getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int numPage,

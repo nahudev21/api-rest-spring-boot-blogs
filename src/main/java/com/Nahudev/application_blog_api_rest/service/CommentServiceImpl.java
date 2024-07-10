@@ -7,6 +7,7 @@ import com.Nahudev.application_blog_api_rest.model.CommentEntity;
 import com.Nahudev.application_blog_api_rest.model.PostEntity;
 import com.Nahudev.application_blog_api_rest.repository.ICommentRepository;
 import com.Nahudev.application_blog_api_rest.repository.IPostRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements ICommentService{
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private ICommentRepository commentRepository;
@@ -97,24 +101,12 @@ public class CommentServiceImpl implements ICommentService{
 
     public CommentDTO mapOutCommentDTO(CommentEntity commentEntity) {
 
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setId(commentEntity.getId());
-        commentDTO.setName(commentEntity.getName());
-        commentDTO.setEmail(commentEntity.getEmail());
-        commentDTO.setBody(commentEntity.getBody());
-
-        return commentDTO;
+        return modelMapper.map(commentEntity, CommentDTO.class);
     }
 
     public CommentEntity mapOutCommentEntity(CommentDTO commentDTO) {
 
-        CommentEntity commentEntity = new CommentEntity();
-        commentEntity.setId(commentDTO.getId());
-        commentEntity.setName(commentDTO.getName());
-        commentEntity.setEmail(commentDTO.getEmail());
-        commentEntity.setBody(commentDTO.getBody());
-
-        return commentEntity;
+        return modelMapper.map(commentDTO, CommentEntity.class);
     }
 
 }
