@@ -2,6 +2,7 @@ package com.Nahudev.application_blog_api_rest.controller;
 
 import com.Nahudev.application_blog_api_rest.dto.CommentDTO;
 import com.Nahudev.application_blog_api_rest.service.ICommentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class CommentControllers {
 
     @PostMapping("/posts/{id_post}/comments")
     public ResponseEntity<CommentDTO> createComment(@PathVariable(name = "id_post") Long id_post,
-                                                    @RequestBody CommentDTO commentDTO) {
+                                                    @Valid @RequestBody CommentDTO commentDTO) {
 
         return new ResponseEntity<>(commentService.createComment(id_post, commentDTO), HttpStatus.CREATED);
 
@@ -42,7 +43,7 @@ public class CommentControllers {
     @PutMapping("/posts/{id_post}/comments/{id}")
     public ResponseEntity<CommentDTO> editComment(@PathVariable(name = "id_post") Long id_post,
                                                   @PathVariable(name = "id") Long id_comment,
-                                                  @RequestBody CommentDTO commentDTO) {
+                                                  @Valid @RequestBody CommentDTO commentDTO) {
 
         CommentDTO commentResponse = commentService.editComment(id_post, id_comment, commentDTO);
         return new ResponseEntity<>(commentResponse, HttpStatus.OK);
