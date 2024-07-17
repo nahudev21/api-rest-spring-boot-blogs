@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,7 +30,11 @@ public class UserEntity {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "id"))
+    @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id",
+            referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "id"))
     private Set<Rol> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<TokenEntity> tokens;
 
 }

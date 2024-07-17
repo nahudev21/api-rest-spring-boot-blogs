@@ -1,11 +1,13 @@
 package com.Nahudev.application_blog_api_rest.controller;
 
+import com.Nahudev.application_blog_api_rest.dto.JwtAuthResponseDTO;
 import com.Nahudev.application_blog_api_rest.dto.LoginDTO;
 import com.Nahudev.application_blog_api_rest.dto.RegisterDTO;
 import com.Nahudev.application_blog_api_rest.model.Rol;
 import com.Nahudev.application_blog_api_rest.model.UserEntity;
 import com.Nahudev.application_blog_api_rest.repository.IRolRepository;
 import com.Nahudev.application_blog_api_rest.repository.IUserRepository;
+import com.Nahudev.application_blog_api_rest.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,13 +40,18 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<JwtAuthResponseDTO> authenticateUser(@RequestBody LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(), loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("Inicio de sesión con exito!", HttpStatus.OK);
+
+        String token = jwtTokenProvider.generateAccesToken(authentication);
+        return ResponseEntity.ok(new JwtAuthResponseDTO(token));
     }
 
     @PostMapping("/register")
