@@ -35,6 +35,6 @@ public class UserEntity {
     private Set<Rol> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "userEntity")
-    private List<TokenEntity> tokens;
+    private List<Token> tokens;
 
 }

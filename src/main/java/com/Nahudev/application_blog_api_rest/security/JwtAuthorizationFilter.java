@@ -1,5 +1,6 @@
 package com.Nahudev.application_blog_api_rest.security;
 
+import com.Nahudev.application_blog_api_rest.repository.ITokenRepository;
 import com.Nahudev.application_blog_api_rest.security.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,6 +21,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
 
     @Autowired
+    private ITokenRepository tokenRepository;
+
+    @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
     @Override
@@ -31,8 +35,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
             String token = tokenHeader.substring(7);
+            var isTokenValid = tokenRepository.findByaccesToken(token)
+                    .map(t -> !t.isExpired() && !t.isRevoked())
+                    .orElse(false);
 
-            if (tokenProvider.isTokenValid(token)) {
+            if (tokenProvider.isTokenValid(token) && isTokenValid) {
                 String username = tokenProvider.getUserFromToken(token);
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
