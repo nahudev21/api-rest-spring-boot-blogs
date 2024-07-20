@@ -1,7 +1,6 @@
 package com.Nahudev.application_blog_api_rest.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.ContentType;
 import lombok.*;
 
 @Getter
@@ -11,7 +10,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "tokens")
-public class TokenEntity {
+public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +18,8 @@ public class TokenEntity {
 
     private String accesToken;
 
-    private String tokenType;
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType;
 
     private boolean expired;
 
